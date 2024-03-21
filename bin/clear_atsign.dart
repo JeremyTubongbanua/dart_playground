@@ -1,5 +1,6 @@
 import 'package:args/args.dart';
 import 'package:at_client/at_client.dart';
+import 'package:at_utils/at_utils.dart';
 import 'package:dart_playground/util.dart';
 
 bool isReservedAtKey(final String atSign, final String atKeyStr) {
@@ -8,6 +9,7 @@ bool isReservedAtKey(final String atSign, final String atKeyStr) {
 
 Future<void> main(List<String> arguments) async {
   // get atsign argument from ArgsParser
+  AtSignLogger.root_level = 'SEVERE';
   final ArgParser argsParser = ArgParser();
   argsParser.addOption('atsign', abbr: 'a', help: 'Atsign to clear keys for', mandatory: true);
 

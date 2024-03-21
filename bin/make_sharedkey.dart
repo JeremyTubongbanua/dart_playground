@@ -1,9 +1,11 @@
-import 'package:args/args.dart';
 import 'package:at_client/at_client.dart';
+import 'package:args/args.dart';
+import 'package:at_utils/at_utils.dart';
 import 'package:dart_playground/util.dart';
 
 Future<void> main(List<String> arguments) async {
   // get atsign argument from ArgsParser
+  AtSignLogger.root_level = 'info';
   final ArgParser argsParser = ArgParser();
   argsParser.addOption('sharedby',
       abbr: 'b', help: 'Owner of key', mandatory: true);
@@ -49,8 +51,9 @@ Future<void> main(List<String> arguments) async {
       ;
 
   Metadata metadata = Metadata()
-        ..ttl = 86400
+        ..ttl = 1000*60*10 // 10 minutes
         ..ccd = true
+
         ..ttr = 1000 * 1 * 60 // 1 minute
       ;
 
@@ -58,11 +61,11 @@ Future<void> main(List<String> arguments) async {
 
   print('Putting ${atKey.toString()} with value $atKeyValue');
 
-  bool success = await atClient.put(atKey, atKeyValue);
+  bool success = await atClient.put(atKey, atKeyValue, putRequestOptions: PutRequestOptions()..useRemoteAtServer=true);
   if (success) {
     print('Success');
   } else {
     print('Failed');
   }
-  atClient.syncService.sync();
+  // atClient.syncService.sync();
 }

@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:at_client/at_client.dart';
 import 'package:at_onboarding_cli/at_onboarding_cli.dart';
 import 'package:at_utils/at_utils.dart';
+import 'package:dart_playground/service_factories.dart';
 import 'package:version/version.dart';
 
 // Get the home directory or null if unknown.
@@ -44,13 +45,14 @@ AtOnboardingPreference generatePreference(
     ..hiveStoragePath = '${getHomeDirectory()}/.atsign/temp/$atSign/hive'
     ..rootDomain = 'root.atsign.org'
     ..rootPort = 64
+    ..fetchOfflineNotifications = false
     ;
   return pref;
 }
 
 Future<AtClient> onboard(final String atSign) async  {
   final AtOnboardingPreference pref = generatePreference(atSign, null);
-  final AtOnboardingServiceImpl onboardingService = AtOnboardingServiceImpl(atSign, pref);
+  final AtOnboardingServiceImpl onboardingService = AtOnboardingServiceImpl(atSign, pref, atServiceFactory: ServiceFactoryWithNoOpSyncService());
   bool success = await onboardingService.authenticate();
   if(success) {
     return onboardingService.atClient!;
